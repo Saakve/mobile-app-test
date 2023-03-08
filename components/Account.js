@@ -3,6 +3,8 @@ import { supabase } from "../helper"
 import { StyleSheet, View, Alert } from "react-native"
 import { Button, Input } from "react-native-elements"
 
+import Avatar from "./Avatar"
+
 export default function Account({session}) {
     const [loading, setLoading] = useState(false)
     const [username, setUsername] = useState('')
@@ -12,7 +14,7 @@ export default function Account({session}) {
     const getProfile = async () => {
         try {
             setLoading(true)
-            
+
             if(!session?.user) throw new Error('No user on the session!')
 
             const { data, error, status } = await supabase
@@ -20,10 +22,10 @@ export default function Account({session}) {
                 .select('username, website, avatar_url')
                 .eq('id', session?.user.id)
                 .single()
-            
+
             console.log(error, status, data)    
             if (error && status !== 406) throw error
-            console.log(error)    
+    
             if (data) {
                 setUsername(data.username)
                 setWebsite(data.website)
@@ -55,7 +57,6 @@ export default function Account({session}) {
             if (error) throw error
         } catch (error) {
             if (error instanceof Error) Alert.alert(error.message)  
-            console.log(error)
         } finally {
             setLoading(false)
         }
@@ -67,6 +68,7 @@ export default function Account({session}) {
 
     return (
         <View>
+            
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 <Input label='Email' value={session?.user?.email} disabled/>
             </View>
@@ -75,6 +77,17 @@ export default function Account({session}) {
             </View>
             <View style={styles.verticallySpaced}>
                 <Input label='Website' value={website || ''} onChangeText={text => setWebsite(text)}/>
+            </View>
+
+            <View>
+                <Avatar
+                  size={200}
+                  url={avatarUrl}
+                  onUpload={(url) => {
+                      setAvatarUrl(url)
+                      updateProfile({username, website, avatar_url: url})
+                    }} 
+                />
             </View>
 
             <View style={[styles.verticallySpaced, styles.mt20]}>
