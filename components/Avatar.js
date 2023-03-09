@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
 import { supabase } from "../helper"
 import { StyleSheet, View, Alert, Image, Button } from "react-native"
-import DocumentPicker, { isCancel, isInProgress, types} from "react-native-document-picker"
+import * as DocumentPicker from "expo-document-picker"
 
 
 export default function Avatar({url, size = 150, onUpload}) {
     const [uploading, setUploading] = useState(false)
     const [avatarUrl, setaAvatarUrl] = useState(null)
-    const avatarSize = { heigth: size, with: size}
+    const avatarSize = { height: size, width: size}
 
     const donwloadImage = async path => {
         try {
@@ -28,16 +28,13 @@ export default function Avatar({url, size = 150, onUpload}) {
         try {
             setUploading(true)
 
-            const file = await DocumentPicker.pickSingle({
-              presentationStyle: 'fullScreen',
-              copyTo: 'cachesDirectory',
-              type: types.images,
-              mode: 'open',
+            const file = await DocumentPicker.getDocumentAsync({
+              type: 'image/*',
             })
             
             const photo = {
-                uri: file.fileCopyUri,
-                type: file.type,
+                uri: file.uri,
+                type: file.mimeType,
                 name: file.name,
             }
 

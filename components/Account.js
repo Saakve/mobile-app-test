@@ -9,7 +9,7 @@ export default function Account({session}) {
     const [loading, setLoading] = useState(false)
     const [username, setUsername] = useState('')
     const [website, setWebsite] = useState('')
-    const [avatarUrl, setaAvatarUrl] = useState('')
+    const [avatarUrl, setAvatarUrl] = useState('')
 
     const getProfile = async () => {
         try {
@@ -29,7 +29,7 @@ export default function Account({session}) {
             if (data) {
                 setUsername(data.username)
                 setWebsite(data.website)
-                setaAvatarUrl(data.avatar_url)
+                setAvatarUrl(data.avatar_url)
             }
 
         } catch (error) {
